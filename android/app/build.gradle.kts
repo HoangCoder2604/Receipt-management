@@ -7,7 +7,7 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-// Đọc thông tin Release Keystore
+// Đọc cấu hình Release Keystore
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
 
@@ -37,7 +37,7 @@ android {
         versionName = flutter.versionName
     }
 
-    // Cấu hình chữ ký APK Release
+    // Cấu hình ký APK bằng Release Keystore
     signingConfigs {
         create("release") {
             keyAlias = keystoreProperties.getProperty("keyAlias")
@@ -49,13 +49,18 @@ android {
         }
     }
 
-    buildTypes {
-        getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
-        }
+  buildTypes {
+    getByName("release") {
+        signingConfig = signingConfigs.getByName("release")
+
+        // Tạm tắt R8 để kiểm tra lỗi OCR
+        isMinifyEnabled = false
+        isShrinkResources = false
     }
 }
+}
 
+// Cấu hình Kotlin
 kotlin {
     compilerOptions {
         jvmTarget =
@@ -63,6 +68,7 @@ kotlin {
     }
 }
 
+// Cấu hình Flutter
 flutter {
     source = "../.."
 }
