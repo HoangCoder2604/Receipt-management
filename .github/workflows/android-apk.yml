@@ -1,0 +1,22 @@
+name: Build Receiptly APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Configure and build APK
+        run: bash build_android.sh
+      - name: Upload ready-to-share APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Receiptly-v1.0.0-APK
+          path: dist/Receiptly-v1.0.0.apk
+          if-no-files-found: error
